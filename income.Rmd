@@ -130,6 +130,10 @@ ggplot(income.df, aes(income.df$class, ..count..)) +
 table(income.df$marital_status)/nrow(income.df)
 ```
 
+<p align="center">
+  <img width="400" height="400" src="/graphics/plot1.png">
+</p>
+
 After analysis of the distribution of classes given an individual’s marital status, it seems that a smaller percentage of people from the “>50K” class have never been married; whereas the largest percentage of people from the “<=50K” class have never been married.
 
 ```{r classwork}
@@ -140,6 +144,10 @@ ggplot(income.df, aes(income.df$class, ..count..)) +
 table(income.df$workclass)/nrow(income.df)
 ```
 
+<p align="center">
+  <img width="400" height="400" src="/graphics/plot2.png">
+</p>
+
 This could indicate some potential interaction between the “marital status” variable and “class” variable. Additionally, the largest percentage of individuals from each class are part of the “private class,” which seems to not indicate any interaction occurring between the two classes in the scope of an individual’s work class.
 
 ```{r classocc}
@@ -148,6 +156,10 @@ ggplot(income.df, aes(income.df$class, ..count..)) + geom_bar(aes(fill = income.
 
 table(income.df$workclass)/nrow(income.df)
 ```
+
+<p align="center">
+  <img width="400" height="400" src="/graphics/plot3.png">
+</p>
 
 However, it seems that nearly 70% of individuals indicated that they are "private class." Therefore, it seems reasonable to divide individuals by "private class" and "other class," rather than including the numerous amounts of work classes in the analysis. Also, it seems like a higher percentage of individuals from the ">50K" class are "Prof-specialty" and "Exec-managerial," compared to the "<=50K" class. The higher percentage of individuals from the "<=50K" class are "Adm-clerical" and "Other-
 service".
@@ -160,6 +172,10 @@ ggplot(income.df, aes(income.df$class, ..count..)) +
 table(income.df$relationship)/nrow(income.df)
 ```
 
+<p align="center">
+  <img width="400" height="400" src="/graphics/plot4.png">
+</p>
+
 This finding may be a consequence of the differing sample sizes between the classes, but could indicate an interaction between the variables. Furthermore, the highest percentage of people from class “>50K” consider their relationship status to be either “husband” or “wife;” whereas the highest percentage of people considered themselves “not-in-family” from the class “<=50K.” Similar to other variables, this may indicate an interaction between relationship and class.
 
 ```{r classrace}
@@ -169,6 +185,10 @@ ggplot(income.df, aes(income.df$class, ..count..)) +
 
 table(income.df$race)/nrow(income.df)
 ```
+
+<p align="center">
+  <img width="400" height="400" src="/graphics/plot5.png">
+</p>
 
 Interestingly, the highest percentage of race from both classes is “white.” However, nearly 83% of individuals indicated that they are white; and, therefore, it seems reasonable to divide individuals into either “white race” or “other race” for our analysis.
 
