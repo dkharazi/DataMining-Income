@@ -118,14 +118,105 @@ Additionally, nearly 37% of people who are white have a business-related occupat
 ## Analyze Class
 nrow(subset(income.df, income.df$class==">50K"))
 nrow(subset(income.df, income.df$class=="<=50K"))
+
+# Create transformed matrices for plot1
+withSpouse <- c("Married-civ-spouse", "Married-AF-spouse", "Married-spouse-absent")
+withoutSpouse <- c("Never-married", "Widowed", "Divorced", "Separated")
+
+plot1.df <- income.df
+plot1.df$marital_status[plot1.df$marital_status %in% withSpouse] <- "WithSpouse"
+plot1.df$marital_status[plot1.df$marital_status %in% withoutSpouse] <- "WithoutSpouse"
+
+plot1.df <- plot1.df %>% 
+  group_by(marital_status, class) %>%
+  summarise(num = n()) %>%
+  spread("class", "num", fill = 0) %>%
+  mutate(less = (round((`<=50K`/420), 2)*100), more = (round((`>50K`/100), 2))*100) %>%
+  select(marital_status, less, more) %>%
+  gather(class, num, c("less", "more")) %>%
+  arrange(desc(num), class)
+
+# Create transformed matrices for plot2
+priv <- c("Federal-gov", "Local-gov", "?", 
+         "Self-emp-not-inc", "State-gov", "Self-emp-inc")
+nonPriv <- c("Private")
+
+plot2.df <- income.df
+plot2.df$workclass[plot2.df$workclass %in% priv] <- "priv"
+plot2.df$workclass[plot2.df$workclass %in% nonPriv] <- "nonPriv"
+
+plot2.df <- plot2.df %>% 
+  group_by(workclass, class) %>%
+  summarise(num = n()) %>%
+  spread("class", "num", fill = 0) %>%
+  mutate(less = (round((`<=50K`/420), 2)*100), more = (round((`>50K`/100), 2))*100) %>%
+  select(workclass, less, more) %>%
+  gather(class, num, c("less", "more")) %>%
+  arrange(desc(num), class)
+
+# Create transformed matrices for plot3
+exec <- c("Exec-managerial", "Prof-specialty")
+nonExec <- c("Adm-clerical", "Tech-support", "Handlers-cleaners", "Protective-serv",
+             "Craft-repair", "Machine-op-inspct", "Transport-moving", "Farming-fishing",
+             "Other-service", "Sales", "?", "Priv-house-serv")
+
+plot3.df <- income.df
+plot3.df$occupation[plot3.df$occupation %in% exec] <- "exec"
+plot3.df$occupation[plot3.df$occupation %in% nonExec] <- "nonExec"
+
+plot3.df <- plot3.df %>% 
+  group_by(occupation, class) %>%
+  summarise(num = n()) %>%
+  spread("class", "num", fill = 0) %>%
+  mutate(less = (round((`<=50K`/420), 2)*100), more = (round((`>50K`/100), 2))*100) %>%
+  select(occupation, less, more) %>%
+  gather(class, num, c("less", "more")) %>%
+  arrange(desc(num), class)
+
+# Create transformed matrices for plot4
+married <- c("Husband", "Wife")
+unmarried <- c("Own-child", "Not-in-family", "Unmarried", "Other-relative")
+
+plot4.df <- income.df
+plot4.df$relationship[plot4.df$relationship %in% married] <- "married"
+plot4.df$relationship[plot4.df$relationship %in% unmarried] <- "unmarried"
+
+plot4.df <- plot4.df %>% 
+  group_by(relationship, class) %>%
+  summarise(num = n()) %>%
+  spread("class", "num", fill = 0) %>%
+  mutate(less = (round((`<=50K`/420), 2)*100), more = (round((`>50K`/100), 2))*100) %>%
+  select(relationship, less, more) %>%
+  gather(class, num, c("less", "more")) %>%
+  arrange(desc(num), class)
+
+# Create transformed matrices for plot5
+other <- c("Other", "Asian-Pac-Islander", "Amer-Indian-Eskimo")
+
+plot5.df <- income.df
+plot5.df$race[plot5.df$race %in% other] <- "other"
+
+plot5.df <- plot5.df %>% 
+  group_by(race, class) %>%
+  summarise(num = n()) %>%
+  spread("class", "num", fill = 0) %>%
+  mutate(less = (round((`<=50K`/420), 2)*100), more = (round((`>50K`/100), 2))*100) %>%
+  select(race, less, more) %>%
+  gather(class, num, c("less", "more")) %>%
+  arrange(desc(num), class)
 ```
 
 The "class" variable seemed to be a good indicator of income under some analysis and assumption. There needed to be a large enough sample size in each class, ">50K" and "<=50K," in order to ensure any analysis could be conducted. Although only 100 entries existed with class equal to ">50K," and 420 entries existed with class equal to "<=50K," we should assume that the sample sizes for each group are large enough in order to perform further analysis. Most likely, the skewness is a result of the actual data and not the collection of data, since fewer people are wealthier than the given class.
 
 ```{r classmar}
 ## Analyze Class and Marital Status
-ggplot(income.df, aes(income.df$class, ..count..)) + 
-  geom_bar(aes(fill = income.df$marital_status), position = "dodge")
+ggplot(plot1.df, aes(x = reorder(factor(marital_status), -num), y = num, fill = class)) + 
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Marital Status", y = "% of Individuals") +
+  scale_fill_brewer(name = "Income Class", 
+                    labels = c("Less than $50k", "Greater than $50k"),
+                    palette = "Paired") +
+  scale_x_discrete(labels = c("With a Spouse", "Without a Spouse"))
 
 table(income.df$marital_status)/nrow(income.df)
 ```
@@ -138,8 +229,13 @@ After analysis of the distribution of classes given an individual’s marital st
 
 ```{r classwork}
 ## Analyze Class and Workclass
-ggplot(income.df, aes(income.df$class, ..count..)) + 
-  geom_bar(aes(fill = income.df$workclass), position = "dodge")
+ggplot(plot2.df, aes(x = reorder(factor(workclass), -num), y = num, fill = class)) + 
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Working Class", y = "% of Individuals") +
+  scale_fill_brewer(name = "Income Class", 
+                    labels = c("Less than $50k", "Greater than $50k"),
+                    palette = "Paired") +
+  scale_x_discrete(labels = c("Private Job", "Non-Priv. Job"))
 
 table(income.df$workclass)/nrow(income.df)
 ```
@@ -152,9 +248,15 @@ This could indicate some potential interaction between the “marital status” 
 
 ```{r classocc}
 ## Analyze Class and Occupation
-ggplot(income.df, aes(income.df$class, ..count..)) + geom_bar(aes(fill = income.df$occupation), position = "dodge")
+ggplot(plot3.df, aes(x = reorder(factor(occupation), -num), y = num, fill = class)) + 
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Occupation", y = "% of Individuals") +
+  scale_fill_brewer(name = "Income Class", 
+                    labels = c("Less than $50k", "Greater than $50k"),
+                    palette = "Paired") +
+  scale_x_discrete(labels = c("Executive", "Non-Executive"))
 
-table(income.df$workclass)/nrow(income.df)
+table(income.df$occupation)/nrow(income.df)
 ```
 
 <p align="center">
@@ -166,8 +268,13 @@ service".
 
 ```{r classrel}
 ## Analyze Class and Relationship
-ggplot(income.df, aes(income.df$class, ..count..)) +
-  geom_bar(aes(fill = income.df$relationship), position = "dodge")
+ggplot(plot4.df, aes(x = reorder(factor(relationship), -num), y = num, fill = class)) + 
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Relationship", y = "% of Individuals") +
+  scale_fill_brewer(name = "Income Class", 
+                    labels = c("Less than $50k", "Greater than $50k"),
+                    palette = "Paired") +
+  scale_x_discrete(labels = c("Married", "Unmarried"))
 
 table(income.df$relationship)/nrow(income.df)
 ```
@@ -180,8 +287,13 @@ This finding may be a consequence of the differing sample sizes between the clas
 
 ```{r classrace}
 ## Analyze Class and Race
-ggplot(income.df, aes(income.df$class, ..count..)) +
-  geom_bar(aes(fill = income.df$race), position = "dodge")
+ggplot(plot5.df, aes(x = reorder(factor(race), -num), y = num, fill = class)) + 
+  geom_bar(stat = "identity", position = position_dodge()) +
+  labs(x = "Race", y = "% of Individuals") +
+  scale_fill_brewer(name = "Income Class", 
+                    labels = c("Less than $50k", "Greater than $50k"),
+                    palette = "Paired") +
+  scale_x_discrete(labels = c("White", "Black", "Other"))
 
 table(income.df$race)/nrow(income.df)
 ```
