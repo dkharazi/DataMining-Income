@@ -1,6 +1,8 @@
 ## Overview
 
-This data was extracted from the 1994 Census bureau database by Ronny Kohavi and Barry Becker (Data Mining and Visualization, Silicon Graphics). A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1) && (HRSWK>0)). The prediction task is to determine whether a person makes over $50K a year.
+This data was extracted from the [1994 Census Bureau database](http://www.census.gov/en.html) by Ronny Kohavi and Barry Becker (Data Mining and Visualization, Silicon Graphics). A set of reasonably clean records was extracted using the following conditions: ((AAGE>16) && (AGI>100) && (AFNLWGT>1) && (HRSWK>0)). The prediction task is to determine whether a person makes over $50K a year. For more information about the data, please either refer to the [Census Bureau](http://www.census.gov/en.html) or [Kaggle](https://www.kaggle.com/uciml/adult-census-income/home), who is a popular company that popular distributes data, along with insightful descriptions about the data. 
+
+Dataset: [Adult Census Income Data](https://www.kaggle.com/uciml/adult-census-income/home) [465 KB]
 
 ## Variable Descriptions
 
