@@ -8,7 +8,7 @@ Dataset: [Adult Census Income Data](https://www.kaggle.com/uciml/adult-census-in
 
 ## Variable Descriptions
 
-- `ID:` The ID of the individual.
+`ID:` The ID of the individual.
 - `Age:` The age of the individual.
 - `Workclass:` The working class of the individual.
 - `Education:` The level of education of the individual.
